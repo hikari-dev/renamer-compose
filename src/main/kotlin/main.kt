@@ -91,7 +91,6 @@ private fun rename(dir: String, target: String, replacement: String): Result {
     val file = File(dir)
     if (!file.exists()) {
         return Result("路径文件夹不存在！", Result.Type.ERR)
-
     }
     if (!file.isDirectory) {
         return Result("不是一个文件夹路径！", Result.Type.ERR)
