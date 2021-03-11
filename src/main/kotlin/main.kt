@@ -17,13 +17,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.awt.image.BufferedImage
 import java.io.File
+import javax.imageio.ImageIO
 
 
 fun main() = Window(
     title = "Renamer",
     size = IntSize(500, 360),
     resizable = false,
+    icon = loadIcon()
 ) {
     var dir by remember { mutableStateOf("") }
     var target by remember { mutableStateOf("") }
@@ -102,4 +105,11 @@ private fun rename(dir: String, target: String, replacement: String): Result {
             f.renameTo(File(file, f.name.replaceFirst(target, replacement)))
         }
     return Result("修改完成", Result.Type.INFO)
+}
+
+private fun loadIcon(): BufferedImage {
+    val resource = Thread.currentThread().contextClassLoader.getResource("567.jpeg")
+    return resource?.openStream().use {
+        ImageIO.read(it)
+    }
 }
