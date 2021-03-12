@@ -1,11 +1,9 @@
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,9 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
 
 
 fun main() = Window(
@@ -39,27 +34,9 @@ fun main() = Window(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            OutlinedTextField(
-                value = dir,
-                onValueChange = { dir = it },
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 2.dp),
-                singleLine = true,
-                label = { Text("文件所处文件夹路径") },
-            )
-            OutlinedTextField(
-                value = target,
-                onValueChange = { target = it },
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 2.dp),
-                singleLine = true,
-                label = { Text("想要替换掉的名称") },
-            )
-            OutlinedTextField(
-                value = replacement,
-                onValueChange = { replacement = it },
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 2.dp),
-                singleLine = true,
-                label = { Text("替换成为的名称") }
-            )
+            InputTextFiled(dir, { dir = it }, "文件所处文件夹路径")
+            InputTextFiled(target, { target = it }, "想要替换掉的名称")
+            InputTextFiled(replacement, { replacement = it }, "替换成为的名称")
             Button(
                 onClick = { result = rename(dir, target, replacement) },
                 modifier = Modifier.padding(0.dp, 18.dp, 0.dp, 0.dp)
@@ -79,37 +56,7 @@ fun main() = Window(
                 },
                 modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)
             )
-
         }
     }
 }
 
-data class Result(val info: String, val type: Type) {
-    enum class Type {
-        ERR, INFO
-    }
-}
-
-private fun rename(dir: String, target: String, replacement: String): Result {
-    val file = File(dir)
-    if (!file.exists()) {
-        return Result("路径文件夹不存在！", Result.Type.ERR)
-    }
-    if (!file.isDirectory) {
-        return Result("不是一个文件夹路径！", Result.Type.ERR)
-    }
-    file.walkTopDown()
-        .maxDepth(1)
-        .drop(1)
-        .forEach { f ->
-            f.renameTo(File(file, f.name.replaceFirst(target, replacement)))
-        }
-    return Result("修改完成", Result.Type.INFO)
-}
-
-private fun loadIcon(): BufferedImage {
-    val resource = Thread.currentThread().contextClassLoader.getResource("567.jpeg")
-    return resource?.openStream().use {
-        ImageIO.read(it)
-    }
-}
