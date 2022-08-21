@@ -1,28 +1,35 @@
-import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.graphics.toPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.application
 
 
-fun main() = Window(
-    title = "Renamer",
-    size = IntSize(500, 360),
-    resizable = false,
-    icon = loadIcon()
-) {
+fun main() = application {
+    Window(
+        state = WindowState(width = 500.dp, height = 400.dp),
+        title = "Renamer",
+        resizable = false,
+        icon = loadIcon().toPainter(),
+        onCloseRequest = ::exitApplication
+    ) {
+        App()
+    }
+}
+
+@Composable
+fun App() {
     var dir by remember { mutableStateOf("") }
     var target by remember { mutableStateOf("") }
     var replacement by remember { mutableStateOf("") }
@@ -50,6 +57,7 @@ fun main() = Window(
                     Result.Type.INFO -> {
                         Color.Blue
                     }
+
                     Result.Type.ERR -> {
                         Color.Red
                     }
